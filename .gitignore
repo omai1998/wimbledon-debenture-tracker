@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Logs
+*.log
+logs.txt
+
+# Environment
+.env
+
+# macOS
+.DS_Store
+
+# Local state
+.last_wimbledon_scrape
