@@ -1,46 +1,43 @@
-name: Scrape Wimbledon Debentures
+name: Wimbledon Debenture Scraper
 
 on:
   schedule:
-    # Every 2 hours
-    - cron: '0 */2 * * *'
-  workflow_dispatch: # Manual trigger button
-
-permissions:
-  contents: write
+    # Run every 12 hours at 0:00 and 12:00 UTC
+    - cron: '0 */12 * * *'
+  workflow_dispatch:  # Allow manual trigger from GitHub Actions UI
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.14'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install requests beautifulsoup4 pandas lxml
+          pip install crawl4ai
+
+      - name: Install Playwright browsers
+        run: |
+          playwright install chromium
+          playwright install-deps
 
       - name: Run scraper
-        run: python wimbledon_tracker.py
+        run: python wimbledon_tracker_crawl4ai.py
 
-      - name: Commit and push updated data
+      - name: Commit and push changes
         run: |
-          git config user.email "action@github.com"
-          git config user.name "GitHub Action"
-          git add wimbledon_debentures.db wimbledon_analysis.csv wimbledon_daily_snapshots.csv 2>/dev/null || true
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update data - $(date -u '+%Y-%m-%d %H:%M UTC')"
-            git push
-          fi
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add wimbledon_analysis.csv wimbledon_daily_snapshots.csv wimbledon_debentures.db
+          git diff --staged --quiet || git commit -m "Update data - $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
