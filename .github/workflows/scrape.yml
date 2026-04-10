@@ -23,8 +23,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests beautifulsoup4 pandas lxml
           pip install crawl4ai
+          pip install requests beautifulsoup4 pandas
 
       - name: Install Playwright browsers
         run: |
