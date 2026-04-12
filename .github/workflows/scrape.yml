@@ -2,7 +2,8 @@ name: Wimbledon Debenture Scraper
 
 on:
   schedule:
-    # Run every 12 hours at 0:00 and 12:00 UTC
+    # Twice daily at 00:00 and 12:00 UTC. Bump to hourly during the
+    # tournament fortnight (29 Jun - 13 Jul 2026) when prices actually move.
     - cron: '0 */12 * * *'
   workflow_dispatch:  # Allow manual trigger from GitHub Actions UI
 
@@ -19,20 +20,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
+          python-version: '3.13'
 
-      - name: Install dependencies
-        run: |
-          pip install crawl4ai
-          pip install requests beautifulsoup4 pandas
-
-      - name: Install Playwright browsers
-        run: |
-          playwright install chromium
-          playwright install-deps
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
 
       - name: Run scraper
-        run: python wimbledon_tracker_crawl4ai.py
+        run: python wimbledon_tracker.py
 
       - name: Commit and push changes
         run: |

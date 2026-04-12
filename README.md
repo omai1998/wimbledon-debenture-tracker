@@ -19,7 +19,7 @@ Tracks Wimbledon debenture ticket prices from:
 
 ## Automation
 
-Runs every 2 hours via GitHub Actions. Manual trigger available in Actions tab.
+Runs twice daily (00:00 and 12:00 UTC) via GitHub Actions. Manual trigger available in Actions tab.
 
 ## Local Development
 
