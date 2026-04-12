@@ -7,6 +7,9 @@ on:
     - cron: '0 */12 * * *'
   workflow_dispatch:  # Allow manual trigger from GitHub Actions UI
 
+permissions:
+  contents: write  # required so the workflow can commit/push the updated CSVs and DB
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
